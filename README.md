@@ -7,36 +7,31 @@
 
 # Article
 
-
-
 # Requirements
 
 [requirements.txt](requirements.txt)
 
-- # Usage
+# Usage
+
 1. Activate a python environment with requirements <br />
 
 2. Clone the repository, navigate to the cloned folder <br />
    `git@github.com:Xinyan-Xia/SSR-DTA.git` <br />
-
 
 3. Install required packages <br />
    `pip install wheel` <br />
    `pip install -r requirements.txt` <br />
 
 4. Run the experiments <br />
-
-
-
+   
    open models.ipynb and run
-
-
+   
    The log will be saved in the `lightning_log/` folder <br />
 
 5. You can change the params in models.ipynb <br />
-
+   
    - for KIBA datasets, we use the params as follows:
-
+     
      ```python
      param_dict={
       "chem_in_features": 23,
@@ -46,6 +41,7 @@
      "chem_blocks_params": [8, 8, 8, 8, 8, 8],
      "dropout_1":0.2,
      "dropout_2":0.1,
+     "dropout_3":0.2,
      "prot_heads_out_feat_params": [32, 32, 32, 32, 32, 32],
      "prot_blocks_params": [8, 8, 8, 8, 8, 8],
      "prot_windows_params": [7, 7, 7, 7, 7, 7],
@@ -57,9 +53,9 @@
      "T_max": 2000
      }
      ```
-
+   
    - for Davis datasets, we use the params as follows:
-
+     
      ```python
      param_dict={
       "chem_in_features": 23,
@@ -69,6 +65,7 @@
      "chem_blocks_params": [8, 8, 8, 8, 8, 8],
      "dropout_1":0.2,
      "dropout_2":0.1,
+     "dropout_3":0.2,
      "prot_heads_out_feat_params": [32, 32, 32, 32],
      "prot_blocks_params": [8, 8, 8, 8],
      "prot_windows_params": [7, 7, 7, 7],
@@ -80,11 +77,11 @@
      "T_max": 2000
      }
      ```
-
+   
    # Data
-
+   
    - Atomic-level graph features for ligand representation
-
+     
      | Node features                                                | Size |
      | ------------------------------------------------------------ | ---- |
      | One-hot encoded atom type (C, N, O, F, S, Cl, Br, P, I)      | 9    |
@@ -102,9 +99,9 @@
      | Is atom positively charged (1 – yes, 0 – no)                 | 1    |
      | Is atom negatively charged (1 – yes, 0 – no)                 | 1    |
      | Totall                                                       | 23   |
-
+   
    - Residue-level node features for protein graph representation
-
+     
      | Node features                                                                                                                | Size |
      | ---------------------------------------------------------------------------------------------------------------------------- | ---- |
      | Solvent-accessible surface area (scaled by mean and standard deviation)                                                      | 1    |
@@ -116,7 +113,21 @@
      | Phosphorylated (1 – yes, 0 – no, same for all nodes)                                                                         | 1    |
      | Mutated (1 – yes, 0 – no, same for all nodes)                                                                                | 1    |
      | Totall                                                                                                                       | 41   |
-
+   
+   # Train your dataset Step by Step：
+   
+   1. Process all drugs' smiles by [get_mole_graph.ipynb](./get_data/get_mole_graph.ipynb), and pack them in list and name them as "ligand_to_pyg.pkl"
+   
+   2. Process all drugs' smiles to fingerprint by RDkit, and pack them in list and name them as "ligand_to_fp.pkl"
+   
+   3. Process all targets' pdb files by [get_prot_graph.ipynb](./get_data/get_prot_graph.ipynb), and pack them in list and name them as "protein_to_pyg.pkl"
+   
+   4. Process the DTA datas as the fomat [drug_index, target_index, DTA], and pack them in list and name them as "DTAs.pkl"
+   
+   5. Split the datasets into traindataset and testdataset
+   
+   6. Set parameters according to your ideas and run
+   
    # Notes
 - It is recommended to use GPU to speed up the experiments
 - The default parameter is to run on the A40(48G) GPU. If you want to run on a smaller memory GPU, you can adjust the batch size appropriately.
